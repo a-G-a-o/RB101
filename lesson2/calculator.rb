@@ -39,94 +39,108 @@ end
 def zero_division_error(number1, number2, operator)
   (number1 != '0') && (number2 == '0') && (operator == '4')
 end
-# ________END OF METHODS________ #
 
-prompt('welcome')
+def get_name
+  name = ''
 
-name = ''
-loop do
-  name = Kernel.gets().chomp()
+  loop do
+    name = Kernel.gets().chomp()
+    name = name.strip().capitalize()
 
-  if name.empty?()
-    prompt('valid_name')
-  else
-    break
+    if name.empty?()
+      prompt('valid_name')
+    else
+      break
+    end
   end
+  name
 end
 
-puts format(messages('greeting_name'), name: name)
-
-loop do # main loop
-  num1 = ''
+def get_number(prompt_num)
+  num = ''
   loop do
-    prompt('first_number')
-    num1 = Kernel.gets().chomp()
+    prompt(prompt_num)
+    num = Kernel.gets().chomp()
 
-    if number?(num1)
+    if number?(num)
       break
     else
       prompt('valid_number')
     end
   end
+  num
+end
 
-  num2 = ''
-  loop do
-    prompt('second_number')
-    num2 = Kernel.gets().chomp()
-
-    if number?(num2)
-      break
-    else
-      prompt('valid_number')
-    end
-  end
-
+def get_operator
   prompt('operator_prompt')
 
   operator = ''
   loop do
     operator = Kernel.gets().chomp()
 
-    if %w( 1 2 3 4).include?(operator)
+    if %w(1 2 3 4).include?(operator)
       break
     else
       prompt('valid_operator')
     end
   end
-  
-  operation_to_message(operator)
-  
-  result = case operator
-           when '1'
-             num1.to_i() + num2.to_i()
-           when '2'
-             num1.to_i() - num2.to_i()
-           when '3'
-             num1.to_i() * num2.to_i()
+  operator
+end
+
+def calc(num1, num2, op)
+  result = case op
+           when '1' then num1.to_i() + num2.to_i()
+           when '2' then num1.to_i() - num2.to_i()
+           when '3' then num1.to_i() * num2.to_i()
            when '4'
-             if zero_division_error(num1, num2, operator)
+             if zero_division_error(num1, num2, op)
                prompt('zero_division_message')
              else
                num1.to_f() / num2.to_f()
              end
            end
 
-  puts format(messages('result'), result: result) unless zero_division_error(num1, num2, operator)
-  
+  operation_to_message(op)
+
+  unless zero_division_error(num1, num2, op)
+    puts format(messages('result'), result: result)
+  end
+end
+
+def calculate_again
   answer = ''
   loop do
     prompt('again')
-    
+
     answer = Kernel.gets().chomp().downcase()
-    
+
     if answer == "n" || answer == "y"
       break
     else
       prompt('valid_answer')
     end
   end
-  
-  break unless answer == 'y'
+  answer
+end
+# ________END OF METHODS________ #
+
+clear_screen()
+
+prompt('welcome')
+
+name = get_name()
+
+puts format(messages('greeting_name'), name: name)
+
+loop do
+  num1 = get_number('first_number')
+  num2 = get_number('second_number')
+  operator = get_operator()
+
+  calc(num1, num2, operator)
+
+  again = calculate_again()
+  break if again == 'n'
   clear_screen()
 end
 
