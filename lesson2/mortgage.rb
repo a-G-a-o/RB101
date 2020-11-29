@@ -8,10 +8,12 @@ def prompt(message)
 end
 
 def valid_number?(number)
-  if number.to_i < 0 || number.to_f < 0
+  if number.to_i <= 0 || number.to_f <= 0
     false
   elsif number.to_i().to_s() == number || number.to_f().to_s() == number
     true
+  else
+    false
   end
 end
 
@@ -36,22 +38,26 @@ def get_amount
   loan_amount
 end
 
-def get_apr
-  annual_interest = ''
-
-  loop do
-    prompt("Enter annual percentage rate APR: (For example: 5.5 for 5.5%)")
-    annual_interest = Kernel.gets().chomp()
-
-    break if check_number_validity(annual_interest)
-  end
-
-  annual_interest_rate = annual_interest.to_f / 100
+def annual_to_monthly(number)
+  annual_interest_rate = number.to_f / 100
   monthly_interest_rate = (annual_interest_rate / 12)
 
   prompt("Your monthly interest rate is #{monthly_interest_rate}.")
 
   monthly_interest_rate
+end
+
+def get_apr
+  annual_interest_rate = ''
+
+  loop do
+    prompt("Enter annual percentage rate APR: (For example: 5.5 for 5.5%)")
+    annual_interest_rate = Kernel.gets().chomp()
+
+    break if check_number_validity(annual_interest_rate)
+  end
+
+  annual_to_monthly(annual_interest_rate)
 end
 
 def get_duration
@@ -98,11 +104,11 @@ prompt("Welcome! I am the Mortgage Calculator.
 loop do
   loan_amount = get_amount()
 
-  interest_rate = get_apr()
+  monthly_interest = get_apr()
 
   duration = get_duration()
 
-  result = calculate_payment(loan_amount, interest_rate, duration).round(2)
+  result = calculate_payment(loan_amount, monthly_interest, duration).round(2)
   prompt("Your monthly payment is $#{result}.")
 
   again = calculate_again()
