@@ -2,30 +2,30 @@ require 'yaml'
 
 MESSAGE = YAML.load_file('rps_messages.yml')
 
-VALID_CHOICES = {
-  'r' => 'rock',
-  'p' => 'paper',
-  'x' => 'scissors',
-  'l' => 'lizard',
-  'sp' => 'spock'
+CHOICES = {
+  'rock' => { symbol: 'r', beats: %w(scissors lizard) },
+  'paper' => { symbol: 'p', beats: %w(rock spock) },
+  'scissors' => { symbol: 'sc', beats: %w(paper lizard) },
+  'lizard' => { symbol: 'l', beats: %w(spock paper) },
+  'spock' => { symbol: 'sp', beats: %w(scissors rock) }
 }
 
-VALUES = VALID_CHOICES.values.join(', ')
-KEYS = VALID_CHOICES.keys.join(', ')
+puts CHOICES.inspect
 
-WINNING_COMBO = {
-  'rock' => %w(scissors lizard),
-  'paper' => %w(rock spock),
-  'scissors' => %w(paper lizard),
-  'lizard' => %w(spock paper),
-  'spock' => %w(scissors rock)
-}
+NAMES = CHOICES.keys
+PRINT_NAMES = NAMES.join(', ')
+SYMBOLS = CHOICES.values.map { |hash| hash[:symbol] }
+PRINT_SYMBOLS = SYMBOLS.join(', ')
 
 ROUNDS_TO_WIN = 5
 
 # ________________________ METHODS ________________________ #
 def clear_screen
   Kernel.system('clear')
+end
+
+def pause(time = 3)
+  sleep(time)
 end
 
 def messages(message)
@@ -37,7 +37,9 @@ def prompt(message)
 end
 
 def get_player_choice
-  player_choice = get_input("[YOUR TURN] #{VALUES}?\n(Shortcuts: #{KEYS})")
+  player_choice = get_input(
+    "[YOUR TURN] #{PRINT_NAMES}?\n(Shortcuts: #{PRINT_SYMBOLS}"
+  )
 
   player_choice
 end
@@ -67,7 +69,7 @@ def check_input_validity(input)
 end
 
 def check_valid_choices(input)
-  choices = (VALID_CHOICES.value?(input) || VALID_CHOICES.key?(input))
+  choices = (SYMBOLS.include?(input) || NAMES.include?(input))
   if choices == false
     prompt(MESSAGE['error_message'])
   end
@@ -75,26 +77,48 @@ def check_valid_choices(input)
   choices
 end
 
-def key_to_value(input)
-  new_input = VALID_CHOICES.fetch(input)
-  new_input
+def sym_to_name(input)
+  player_choice = ''
+
+  case input
+  when 'r' then player_choice = 'rock'
+  when 'p' then player_choice = 'paper'
+  when 'sc' then player_choice = 'scissors'
+  when 'l' then player_choice = 'lizard'
+  when 'sp' then player_choice = 'spock'
+  else
+    false
+  end
+
+  player_choice
 end
 
-def display_results(player, cpu)
+def win?(first, second)
+  CHOICES[first][:beats].include?(second)
+end
+
+def determine_winner(player, cpu)
   winner = ''
 
-  if WINNING_COMBO[player].include?(cpu)
+  if win?(player, cpu)
     winner = 'player'
-    prompt(MESSAGE['win'])
-  elsif WINNING_COMBO[cpu].include?(player)
+  elsif win?(cpu, player)
     winner = 'cpu'
-    prompt(MESSAGE['lose'])
   else
     winner = 'tie'
-    prompt(MESSAGE['tie'])
   end
 
   winner
+end
+
+def print_result(result)
+  if result == 'player'
+    prompt(MESSAGE['win'])
+  elsif result == 'cpu'
+    prompt(MESSAGE['lose'])
+  else
+    prompt(MESSAGE['tie'])
+  end
 end
 
 def update_score(result, score)
@@ -139,7 +163,7 @@ end
 # _________________________ MAIN _________________________ #
 clear_screen()
 
-puts format(MESSAGE['greeting'], VALUES: VALUES)
+puts format(MESSAGE['greeting'], PRINT_NAMES: PRINT_NAMES)
 prompt(MESSAGE['game_rules'])
 
 loop do
@@ -151,21 +175,25 @@ loop do
     puts format(MESSAGE['round_number'], game_round: game_round)
 
     player_choice = get_player_choice()
-    cpu_choice = VALID_CHOICES.values.sample
+    cpu_choice = NAMES.sample
 
-    if VALID_CHOICES.key?(player_choice)
-      player_choice = key_to_value(player_choice)
+    if player_choice.length <= 2
+      player_choice = symbol_to_name(player_choice)
     end
 
     prompt("[YOU CHOSE: #{player_choice} - SHELBOT CHOSE: #{cpu_choice}]")
 
-    winner = display_results(player_choice, cpu_choice)
+    winner = determine_winner(player_choice, cpu_choice)
     update_score(winner, score)
+    print_result(winner)
 
     prompt("[YOUR SCORE: #{score[:player]} - SHELBOT'S SCORE: #{score[:cpu]}]")
 
     display_grand_winner(score) if game_round == ROUNDS_TO_WIN
     break if game_round == ROUNDS_TO_WIN
+
+    pause
+    clear_screen()
   end
 
   again = play_again()
