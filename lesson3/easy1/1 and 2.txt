@@ -1,0 +1,28 @@
+Question 1:
+
+    numbers = [1, 2, 2, 3]
+    numbers.uniq
+
+    puts numbers
+
+This code would print out:
+1
+2
+2
+3
+
+Since numbers.uniq isn't a mutating method and did not mutate the caller. 
+When calling p numbers, it calls the original numbers array.
+
+
+Question 2:
+!, the bang suffix, could signify a mutating method OR a negating function. 
+When placed at the end of a method, it depends on the method implementation.
+? follows a predicate method and evaluates to boolean values true or false.
+
+1. != "not equals", used in a comparison statement
+2. ! before something turns object into the opposite of their boolean equivalent
+3. ! after something turns method into a mutating method AND depends on method implementation
+4. ? before something, ie: ? : ternary operator for if...else statement
+5. ? after something turns the method into a boolean evaluation
+6. !! before something - used to turn an object into their boolean equivalent
