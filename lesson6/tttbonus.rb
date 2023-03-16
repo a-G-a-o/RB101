@@ -93,9 +93,8 @@ end
 def find_at_risk_square(line, board, marker)
   if board.values_at(*line).count(marker) == 2
     board.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
-  else
-    nil
   end
+  nil
 end
 
 def play_piece!(brd, current_player)
@@ -165,7 +164,7 @@ end
 
 def select_player
   loop do
-    prompt "Select a player: [me], [computer], [random]"
+    prompt "Select a player: [me] [computer] [random]"
     answer = gets.chomp.downcase
 
     case answer
