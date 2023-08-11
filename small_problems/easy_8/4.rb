@@ -1,24 +1,46 @@
 =begin
 
-Write a method that returns a list of all substrings of a string. 
-The returned list should be ordered by where in the string the substring begins. 
-This means that all substrings that start at position 0 should come first, then all substrings that start at position 1, and so on. 
-Since multiple substrings will occur at each position, the substrings at a given position should be returned in order from shortest to longest.
+Write a method that returns a list of all substrings of a string that are palindromic. 
+That is, each substring must consist of the same sequence of characters forwards as it does backwards. 
+The return value should be arranged in the same sequence as the substrings appear in the string. 
+Duplicate palindromes should be included multiple times.
 
-You may (and should) use the leading_substrings method you wrote in the previous exercise:
+You may (and should) use the substrings method you wrote in the previous exercise.
+
+For the purposes of this exercise, you should consider all characters and pay attention to case; that is, "AbcbA" is a palindrome, but neither "Abcba" nor "Abc-bA" are. 
+In addition, assume that single characters are not palindromes.
 
 Examples:
-substrings('abcde') == [
-  'a', 'ab', 'abc', 'abcd', 'abcde',
-  'b', 'bc', 'bcd', 'bcde',
-  'c', 'cd', 'cde',
-  'd', 'de',
-  'e'
+palindromes('abcd') == []
+palindromes('madam') == ['madam', 'ada']
+palindromes('hello-madam-did-madam-goodbye') == [
+  'll', '-madam-', '-madam-did-madam-', 'madam', 'madam-did-madam', 'ada',
+  'adam-did-mada', 'dam-did-mad', 'am-did-ma', 'm-did-m', '-did-', 'did',
+  '-madam-', 'madam', 'ada', 'oo'
 ]
+palindromes('knitting cassettes') == [
+  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
+]
+
+Further exploration:
+Can you modify this method (and/or its predecessors) to ignore non-alphanumeric characters and case? Alphanumeric characters are alphabetic characters(upper and lowercase) and digits.
 
 =end
 
-#my solution
+def palindromes(string)
+  new_arr = []
+  arr_of_substrings = substrings(string)
+
+  arr_of_substrings.each do |element|
+    new_arr << element if palindrome?(element)
+  end
+  new_arr
+end
+
+def palindrome?(string)
+  string.size > 1 && string == string.reverse
+end
+
 def substrings(string)
   new_arr = []
 
@@ -30,29 +52,37 @@ def substrings(string)
   new_arr
 end
 
-#Solution using leading_substrings():
-def leading_substrings(string)
-  new_arr = []
-
-  0.upto(string.size - 1) do |index|
-    new_arr << string[0..index]
+#further exploration:--------------------------------------------------------------
+def palindromes(string, alpha_sensitive=false)
+  substrings(string).select do |word|
+    if alpha_sensitive
+      word = word.chars.select { |char| char.match? /\w/ }.join.downcase
+    end
+    word.size > 1 && word == word.reverse
   end
-  new_arr
 end
 
-def substrings(string)
-  new_arr = []
-  (0..string.size).each do |index|
-    substring = string[index..-1]
-    new_arr.concat(leading_substrings(substring))
-  end
-  new_arr
-end
+p palindromes('abcd') == []
+p palindromes('madam') == ['madam', 'ada']
+p palindromes('knitting cassettes') == [
+  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
+]
 
-p substrings('abcde') == [
-  'a', 'ab', 'abc', 'abcd', 'abcde',
-  'b', 'bc', 'bcd', 'bcde',
-  'c', 'cd', 'cde',
-  'd', 'de',
-  'e'
+#further exploration---------------------------------------------------------------
+p palindromes('hello-madam-did-madam-goodbye', true) == [
+"ll", "-madam", "-madam-", "-madam-did-madam", "-madam-did-madam-", "madam", 
+"madam-", "madam-did-madam", "madam-did-madam-", "ada", "adam-did-mada", 
+"dam-did-mad", "am-did-ma", "m-did-m", "-did", "-did-", "did", "did-", 
+"-madam", "-madam-", "madam", "madam-", "ada", "oo"
+]
+
+p palindromes('abcd') == []
+p palindromes('madam') == ['madam', 'ada']
+p palindromes('hello-madam-did-madam-goodbye') == [
+  'll', '-madam-', '-madam-did-madam-', 'madam', 'madam-did-madam', 'ada',
+  'adam-did-mada', 'dam-did-mad', 'am-did-ma', 'm-did-m', '-did-', 'did',
+  '-madam-', 'madam', 'ada', 'oo'
+]
+p palindromes('knitting cassettes') == [
+  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
 ]

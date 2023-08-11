@@ -1,36 +1,21 @@
 =begin
 
-Write a method that takes a string argument, and returns true if all of the alphabetic characters inside the string are uppercase, false otherwise. 
-Characters that are not alphabetic should be ignored.
+Write a method that takes a first name, a space, and a last name passed as a single String argument, 
+and returns a string that contains the last name, a comma, a space, and the first name.
 
 Examples:
-uppercase?('t') == false
-uppercase?('T') == true
-uppercase?('Four Score') == false
-uppercase?('FOUR SCORE') == true
-uppercase?('4SCORE!') == true
-uppercase?('') == true
+swap_name('Joe Roberts') == 'Roberts, Joe'
 
 =end
 
-LOWERCASE = ('a'..'z').to_a
-
-def uppercase?(string)
-  string.chars.each do |char|
-    next if char =~ /[^A-Za-z]/
-    return false if LOWERCASE.include?(char)
-  end
-  true
+def swap_name(string)
+  string.split(' ').reverse.join(', ')
 end
 
-#launch school solution
-def uppercase?(string)
-  string == string.upcase
+#my solution:
+def swap_name(string)
+  arr = string.split
+  "#{arr[1]}, #{arr[0]}"
 end
 
-p uppercase?('t') == false
-p uppercase?('T') == true
-p uppercase?('Four Score') == false
-p uppercase?('FOUR SCORE') == true
-p uppercase?('4SCORE!') == true
-p uppercase?('') == true
+p swap_name('Joe Roberts') == 'Roberts, Joe'

@@ -1,49 +1,38 @@
 =begin
 
-Write a method that takes a string as an argument, 
-and returns an Array that contains every word from the string, 
-to which you have appended a space and the word length.
+Create a method that takes two integers as arguments. 
+The first argument is a count, and the second is the first number of a sequence that your method will create. 
+The method should return an Array that contains the same number of elements as the count argument, 
+while the values of each element will be multiples of the starting number.
 
-You may assume that words in the string are separated by exactly one space, and that any substring of non-space characters is a word.
+You may assume that the count argument will always have a value of 0 or greater, while the starting number can be any integer value. 
+If the count is 0, an empty list should be returned.
 
 Examples:
-word_lengths("cow sheep chicken") == ["cow 3", "sheep 5", "chicken 7"]
-word_lengths("baseball hot dogs and apple pie") ==
-  ["baseball 8", "hot 3", "dogs 4", "and 3", "apple 5", "pie 3"]
-word_lengths("It ain't easy, is it?") == ["It 2", "ain't 5", "easy, 5", "is 2", "it? 3"]
-word_lengths("Supercalifragilisticexpialidocious") ==
-  ["Supercalifragilisticexpialidocious 34"]
-word_lengths("") == []
+sequence(5, 1) == [1, 2, 3, 4, 5]
+sequence(4, -7) == [-7, -14, -21, -28]
+sequence(3, 0) == [0, 0, 0]
+sequence(0, 1000000) == []
 
-Algorithm:  => exception case for empty string?
-            split string into array
-            parse through each array element
-              new_array << "#{element} #{element.size}"
-            end
-            new_array
 =end
 
-def word_lengths(string)
-  words = string.split
-  
-  words.map do |word|
-    word + ' ' + word.length.to_s
+def sequence(count, sequence)
+  new_arr = []
+  counter = sequence
+
+  count.times do
+    new_arr << counter
+    counter += sequence
   end
+  new_arr
 end
 
-#even shorter solution:
-def word_lengths(string)
-  string.split.map { |word| "#{word} #{word.length}" }
+#solution 2:
+def sequence(count, sequence)
+  (1..count).map { |value| value * sequence}
 end
-  
-p word_lengths("cow sheep chicken") == ["cow 3", "sheep 5", "chicken 7"]
 
-p word_lengths("baseball hot dogs and apple pie") ==
-  ["baseball 8", "hot 3", "dogs 4", "and 3", "apple 5", "pie 3"]
-
-p word_lengths("It ain't easy, is it?") == ["It 2", "ain't 5", "easy, 5", "is 2", "it? 3"]
-
-p word_lengths("Supercalifragilisticexpialidocious") ==
-  ["Supercalifragilisticexpialidocious 34"]
-
-p word_lengths("") == []
+p sequence(5, 1) == [1, 2, 3, 4, 5]
+p sequence(4, -7) == [-7, -14, -21, -28]
+p sequence(3, 0) == [0, 0, 0]
+p sequence(0, 1000000) == []

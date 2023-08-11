@@ -1,88 +1,48 @@
 =begin
 
-Write a method that returns a list of all substrings of a string that are palindromic. 
-That is, each substring must consist of the same sequence of characters forwards as it does backwards. 
-The return value should be arranged in the same sequence as the substrings appear in the string. 
-Duplicate palindromes should be included multiple times.
+Write a method that takes two arguments: the first is the starting number, and the second is the ending number. Print out all numbers between the two numbers, except if a number is divisible by 3, print "Fizz", if a number is divisible by 5, print "Buzz", and finally if a number is divisible by 3 and 5, print "FizzBuzz".
 
-You may (and should) use the substrings method you wrote in the previous exercise.
-
-For the purposes of this exercise, you should consider all characters and pay attention to case; that is, "AbcbA" is a palindrome, but neither "Abcba" nor "Abc-bA" are. 
-In addition, assume that single characters are not palindromes.
-
-Examples:
-palindromes('abcd') == []
-palindromes('madam') == ['madam', 'ada']
-palindromes('hello-madam-did-madam-goodbye') == [
-  'll', '-madam-', '-madam-did-madam-', 'madam', 'madam-did-madam', 'ada',
-  'adam-did-mada', 'dam-did-mad', 'am-did-ma', 'm-did-m', '-did-', 'did',
-  '-madam-', 'madam', 'ada', 'oo'
-]
-palindromes('knitting cassettes') == [
-  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
-]
-
-Further exploration:
-Can you modify this method (and/or its predecessors) to ignore non-alphanumeric characters and case? Alphanumeric characters are alphabetic characters(upper and lowercase) and digits.
+Example:
+fizzbuzz(1, 15) # -> 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz
 
 =end
 
-def palindromes(string)
-  new_arr = []
-  arr_of_substrings = substrings(string)
-
-  arr_of_substrings.each do |element|
-    new_arr << element if palindrome?(element)
-  end
-  new_arr
-end
-
-def palindrome?(string)
-  string.size > 1 && string == string.reverse
-end
-
-def substrings(string)
-  new_arr = []
-
-  0.upto(string.size - 1) do |count|
-    count.upto(string.size - 1) do |index|
-      new_arr << string[count..index]
+def fizzbuzz(num1, num2)
+  arr = []
+  num1.upto(num2) do |num|
+    if num % 5 == 0 && num % 3 == 0
+      arr << 'FizzBuzz'
+    elsif num % 3 == 0
+      arr << 'Fizz'
+    elsif num % 5 == 0
+      arr << 'Buzz'
+    else
+      arr << num
     end
   end
-  new_arr
+  arr.join(', ')
 end
 
-#further exploration:--------------------------------------------------------------
-def palindromes(string, alpha_sensitive=false)
-  substrings(string).select do |word|
-    if alpha_sensitive
-      word = word.chars.select { |char| char.match? /\w/ }.join.downcase
-    end
-    word.size > 1 && word == word.reverse
+#launch school solution:
+def fizzbuzz(starting_number, ending_number)
+  result = []
+  starting_number.upto(ending_number) do |number|
+    result << fizzbuzz_value(number)
+  end
+  puts result.join(', ')
+end
+
+def fizzbuzz_value(number)
+  case
+  when number % 3 == 0 && number % 5 == 0
+    'FizzBuzz'
+  when number % 5 == 0
+    'Buzz'
+  when number % 3 == 0
+    'Fizz'
+  else
+    number
   end
 end
 
-p palindromes('abcd') == []
-p palindromes('madam') == ['madam', 'ada']
-p palindromes('knitting cassettes') == [
-  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
-]
-
-#further exploration---------------------------------------------------------------
-p palindromes('hello-madam-did-madam-goodbye', true) == [
-"ll", "-madam", "-madam-", "-madam-did-madam", "-madam-did-madam-", "madam", 
-"madam-", "madam-did-madam", "madam-did-madam-", "ada", "adam-did-mada", 
-"dam-did-mad", "am-did-ma", "m-did-m", "-did", "-did-", "did", "did-", 
-"-madam", "-madam-", "madam", "madam-", "ada", "oo"
-]
-
-p palindromes('abcd') == []
-p palindromes('madam') == ['madam', 'ada']
-p palindromes('hello-madam-did-madam-goodbye') == [
-  'll', '-madam-', '-madam-did-madam-', 'madam', 'madam-did-madam', 'ada',
-  'adam-did-mada', 'dam-did-mad', 'am-did-ma', 'm-did-m', '-did-', 'did',
-  '-madam-', 'madam', 'ada', 'oo'
-]
-p palindromes('knitting cassettes') == [
-  'nittin', 'itti', 'tt', 'ss', 'settes', 'ette', 'tt'
-]
+p fizzbuzz(1, 15) # -> 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz

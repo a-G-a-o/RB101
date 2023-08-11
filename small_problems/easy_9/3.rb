@@ -1,36 +1,36 @@
 =begin
 
-Write a method that takes a number as an argument. If the argument is a positive number, return the negative of that number. 
-If the number is 0 or negative, return the original number.
+Write a method that takes an integer argument, and returns an Array of all integers, in sequence, between 1 and the argument.
+
+You may assume that the argument will always be a valid integer that is greater than 0.
 
 Examples:
-negative(5) == -5
-negative(-3) == -3
-negative(0) == 0      # There's no such thing as -0 in ruby
+sequence(5) == [1, 2, 3, 4, 5]
+sequence(3) == [1, 2, 3]
+sequence(1) == [1]
 
 Further exploration:
-Which solution is better?
+Food for thought: what do you think sequence should return if the argument is not greater than 0. 
+For instance, what should you do if the argument is -1? Can you alter your method to handle this case?
 
 =end
 
-#my solution:
-def negative(number)
-  return number * -1 if number * 1 > 0
-  number
+def sequence(number)
+  new_arr = []
+  (1..number).each {|num| new_arr << num}
+  new_arr
 end
 
 #launch school solution:
-def negative(number)
-  number > 0 ? -number : number
+def sequence(number)
+  (1..number).to_a
 end
 
-#further exploration:
-def negative(number)
-  -number.abs
+#further exploration
+def sequence(number)
+  number > 0 ? (1..number).to_a : (number..1).to_a
 end
-#This method is written shorter but it goes through the complicated steps of stripping number of its sign, even if number
-#is already negative to begin with. Then the negative is added back. Solution 1 is much more logically straightfoward.
 
-p negative(5) == -5
-p negative(-3) == -3
-p negative(0) == 0      # There's no such thing as -0 in ruby
+p sequence(5) == [1, 2, 3, 4, 5]
+p sequence(3) == [1, 2, 3]
+p sequence(1) == [1]

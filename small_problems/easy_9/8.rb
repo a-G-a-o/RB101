@@ -1,38 +1,25 @@
 =begin
 
-Create a method that takes two integers as arguments. 
-The first argument is a count, and the second is the first number of a sequence that your method will create. 
-The method should return an Array that contains the same number of elements as the count argument, 
-while the values of each element will be multiples of the starting number.
+Write a method which takes a grocery list (array) of fruits with quantities and converts it into an array of the correct number of each fruit.
 
-You may assume that the count argument will always have a value of 0 or greater, while the starting number can be any integer value. 
-If the count is 0, an empty list should be returned.
-
-Examples:
-sequence(5, 1) == [1, 2, 3, 4, 5]
-sequence(4, -7) == [-7, -14, -21, -28]
-sequence(3, 0) == [0, 0, 0]
-sequence(0, 1000000) == []
+Example:
+buy_fruit([["apples", 3], ["orange", 1], ["bananas", 2]]) == ["apples", "apples", "apples", "orange", "bananas","bananas"]
 
 =end
 
-def sequence(count, sequence)
+#solution 1:
+def buy_fruit(arr)
   new_arr = []
-  counter = sequence
-
-  count.times do
-    new_arr << counter
-    counter += sequence
+  arr.each do |sub_arr|  #alternate syntax: arr.each do |fruit, quantity|
+    fruit, quantity = sub_arr[0], sub_arr[1]
+    quantity.times { new_arr << fruit }
   end
   new_arr
 end
 
 #solution 2:
-def sequence(count, sequence)
-  (1..count).map { |value| value * sequence}
+def buy_fruit(arr)
+  arr.map { |fruit, quantity| [fruit] * quantity }.flatten
 end
 
-p sequence(5, 1) == [1, 2, 3, 4, 5]
-p sequence(4, -7) == [-7, -14, -21, -28]
-p sequence(3, 0) == [0, 0, 0]
-p sequence(0, 1000000) == []
+p buy_fruit([["apples", 3], ["orange", 1], ["bananas", 2]]) == ["apples", "apples", "apples", "orange", "bananas","bananas"]

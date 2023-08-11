@@ -1,48 +1,37 @@
 =begin
 
-Write a method that returns true if the string passed as an argument is a palindrome, false otherwise. 
-A palindrome reads the same forward and backward. For this exercise, case matters as does punctuation and spaces.
+Write another method that returns true if the string passed as an argument is a palindrome, false otherwise. 
+This time, however, your method should be case-insensitive, and it should ignore all non-alphanumeric characters. 
+If you wish, you may simplify things by calling the palindrome? method you wrote in the previous exercise.
 
 Examples:
+real_palindrome?('madam') == true
+real_palindrome?('Madam') == true           # (case does not matter)
+real_palindrome?("Madam, I'm Adam") == true # (only alphanumerics matter)
+real_palindrome?('356653') == true
+real_palindrome?('356a653') == true
+real_palindrome?('123ab321') == false
 
-palindrome?('madam') == true
-palindrome?('Madam') == false          # (case matters)
-palindrome?("madam i'm adam") == false # (all characters matter)
-palindrome?('356653') == true
-
------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 input: string
-output: boolean - true/false
-algorithm:  brute force solution that I didn't use:
-            loop through word
-              if first letter matches last letter
-                then check if letter2 matches last letter - 1
-                check matches until it reaches center of the string
+output: boolean
+algorithm:  convert string input to lowercase and delete all non-alphanumerics and spaces
+            use string == string.reverse
 
 =end
-
-def palindrome?(string)
-  string == string.reverse
-end
-
-def palindrome?(array)
-  array == array.reverse
-end
-
-def multi_purpose_palindromic_detector(item)
+def palindrome?(item)
   item == item.reverse
 end
 
-p palindrome?([1, 10, 100, 10, 1]) == true
-p palindrome?(['a', 'b', 'c']) == false          # (case matters)
-p palindrome?("madam i'm adam") == false # (all characters matter)
-p palindrome?('356653') == true
+def real_palindrome?(item)
+  item = item.downcase.delete('^a-z0-9')
+  palindrome?(item)
+end
 
-=begin
-Further exploration:
-Write a method that can take either an array or a string argument, and determines whether that argument is a palindrome.
 
-Write a method that determines whether an array is palindromic:
-
-=end
-
+p real_palindrome?('madam') == true
+p real_palindrome?('Madam') == true           # (case does not matter)
+p real_palindrome?("Madam, I'm Adam") == true # (only alphanumerics matter)
+p real_palindrome?('356653') == true
+p real_palindrome?('356a653') == true
+p real_palindrome?('123ab321') == false

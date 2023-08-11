@@ -1,28 +1,36 @@
 =begin
 
-Write a method that returns true if its integer argument is palindromic, false otherwise. 
-A palindromic number reads the same forwards and backwards.
+Write a method that takes a string argument, and returns true if all of the alphabetic characters inside the string are uppercase, false otherwise. 
+Characters that are not alphabetic should be ignored.
 
 Examples:
-palindromic_number?(34543) == true
-palindromic_number?(123210) == false
-palindromic_number?(22) == true
-palindromic_number?(5) == true
-
-----------------------------------------------------------------------------------------------
+uppercase?('t') == false
+uppercase?('T') == true
+uppercase?('Four Score') == false
+uppercase?('FOUR SCORE') == true
+uppercase?('4SCORE!') == true
+uppercase?('') == true
 
 =end
 
+LOWERCASE = ('a'..'z').to_a
 
-def palindrome?(item)
-  item == item.reverse
+def uppercase?(string)
+  string.chars.each do |char|
+    next if char =~ /[^A-Za-z]/
+    return false if LOWERCASE.include?(char)
+  end
+  true
 end
 
-def palindromic_number?(num)
-  palindrome?(num.to_s)
+#launch school solution
+def uppercase?(string)
+  string == string.upcase
 end
 
-p palindromic_number?(34543) == true
-p palindromic_number?(123210) == false
-p palindromic_number?(22) == true
-p palindromic_number?(5) == true
+p uppercase?('t') == false
+p uppercase?('T') == true
+p uppercase?('Four Score') == false
+p uppercase?('FOUR SCORE') == true
+p uppercase?('4SCORE!') == true
+p uppercase?('') == true
