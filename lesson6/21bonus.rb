@@ -1,3 +1,4 @@
+require 'pry'
 require 'io/console'
 
 SUITS = ['H', 'D', 'S', 'C']
@@ -11,6 +12,7 @@ def initalize_deck
 end
 
 def prompt(msg)
+  puts ""
   puts "==> #{msg}"
 end
 
@@ -20,15 +22,11 @@ def display_text(msg)
   sleep(0.5)
 end
 
-def prompt_continue
-  prompt "[ Press any key to continue ]"
+def prompt_continue(round = false)
+  prompt "[ Press any key to START next round ]" if round
+  prompt "[ Press any key to continue ]" if !round
   STDIN.getch
   system 'clear'
-end
-
-def prompt_next_round
-  display_text "[ Press any key to START next round ]"
-  STDIN.getch
 end
 
 def busted?(total)
@@ -54,9 +52,7 @@ def display_deck(deck, name)
   deck.each do |card|
     puts "   [#{card[1]} of #{symbol_to_word(card[0])}]"
   end
-
-  puts "   --> Total is: #{total(deck)}"
-  puts ""
+  puts "--> Total is: #{total(deck)}"
 end
 
 def total(deck)
@@ -70,13 +66,16 @@ end
 
 def string_to_int(str, sum)
   num = 0
-  case str
-  when '1'..'10' then num = str.to_i
-  when 'K', 'Q', 'J' then num = 10
-  when 'A'
-    num = 11 if sum <= 10
-    num = 1 if sum > 10
-  else num = 0
+  card_values = { '1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5,
+                  '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10,
+                  'J' => 10, 'Q' => 10, 'K' => 10 }
+
+  if str == 'A' && sum <= 10
+    num = 11
+  elsif str == 'A' && sum > 10
+    num = 1
+  else
+    num = card_values[str]
   end
   num
 end
@@ -113,7 +112,7 @@ end
 
 def welcome_msg
   display_text "* * * * WELCOME TO THE GAME OF TWENTY-ONE * * * *"
-  display_text "> > > >  WIN 5 TIMES TO BEAT THE GAME  < < < < <"
+  display_text "* * * * WIN - 5 - TIMES TO BEAT THE GAME  * * * *"
   sleep(1)
 
   loop do
@@ -174,7 +173,6 @@ end
 def display_score(player_score, dealer_score)
   puts "  PLAYER WINS: #{player_score}"
   puts "  DEALER WINS: #{dealer_score}"
-  puts ""
 end
 
 # --------------------------MAIN-------------------------------
@@ -187,7 +185,6 @@ loop do
   player_score = 0
   dealer_score = 0
   round_count = 0
-  winner = ''
 
   loop do
     system 'clear'
@@ -200,7 +197,7 @@ loop do
     display_score(player_score, dealer_score)
     prompt_continue
 
-    display_text "Dealing cards..."
+    display_text "Dealing cards..." # deal cards
     2.times do
       player_deck << deck.pop
       dealer_deck << deck.pop
@@ -210,7 +207,6 @@ loop do
     display_text "DEALER'S DECK:"
     puts "   [#{deck[0][1]} of #{symbol_to_word(deck[0][0])}]"
     puts "   [HIDDEN]"
-    puts ""
 
     player_total = total(player_deck)
     dealer_total = total(dealer_deck)
@@ -219,21 +215,21 @@ loop do
       player_response = nil
 
       loop do
-        prompt "Do you want to 'hit' or 'stay'?"
-        player_response = gets.chomp.downcase
-        break if ['hit', 'stay'].include?(player_response)
+        prompt "Do you want to (1)hit or (2)stay?"
+        player_response = gets.chomp.to_i
+        break if player_response == 1 || player_response == 2
         display_text "Sorry, invalid response. Try again."
       end
 
-      if player_response == 'hit'
+      if player_response == 1
         display_text "Player hits."
         player_deck << deck.pop
         display_deck(player_deck, 'player')
         player_total = total(player_deck)
       end
 
-      if player_response == 'stay' || busted?(player_total)
-        display_text "Player stays." if player_response == 'stay'
+      if player_response == 2 || busted?(player_total)
+        display_text "Player stays." if player_response == 2
         break
       end
     end
@@ -241,7 +237,7 @@ loop do
     if busted?(player_total)
       display_text "Player busted! Player total is: #{player_total}"
       display_result(dealer_total, player_total)
-      prompt_next_round
+      prompt_continue(true)
       dealer_score += 1
       break if player_score >= 5 || dealer_score >= 5
       next
@@ -264,7 +260,7 @@ loop do
     if busted?(dealer_total)
       display_text "Dealer busted! Dealer total is: #{dealer_total}"
       player_score += 1
-      prompt_next_round
+      prompt_continue(true)
       break if player_score >= 5 || dealer_score >= 5
       next
     else
@@ -279,27 +275,19 @@ loop do
     display_deck(dealer_deck, 'dealer')
 
     winner = detect_winner(dealer_total, player_total)
-    display_result(dealer_total, player_total) # compare totals
-    prompt_next_round
+    display_result(dealer_total, player_total)
+    prompt_continue(true)
 
-    if winner == :dealer || winner == :player_busted
-      dealer_score += 1
-    elsif winner == :player || winner == :dealer_busted
-      player_score += 1
-    end
-
+    dealer_score += 1 if winner == :dealer || winner == :player_busted
+    player_score += 1 if winner == :player || winner == :dealer_busted
     break if player_score >= 5 || dealer_score >= 5
   end
 
   system 'clear'
   display_text "-> FINAL SCORE <- <"
   display_score(player_score, dealer_score)
-
-  if winner == :dealer || winner == :player_busted
-    display_text "DEALER wins 5 games!"
-  elsif winner == :player || winner == :dealer_busted
-    display_text "PLAYER wins 5 games!"
-  end
+  display_text "DEALER wins 5 games!" if dealer_score == 5
+  display_text "PLAYER wins 5 games!" if player_score == 5
   sleep(1)
   break unless play_again
 end
