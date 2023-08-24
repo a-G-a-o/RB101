@@ -40,8 +40,6 @@ def count_occurrences(arr)
   end
 end
 
-
-
 vehicles = [
   'car', 'car', 'truck', 'car', 'SUV', 'truck',
   'motorcycle', 'motorcycle', 'car', 'truck',
