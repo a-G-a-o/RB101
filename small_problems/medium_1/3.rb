@@ -1,4 +1,5 @@
 require 'pry'
+
 =begin
 If you take a number like 735291, and rotate it to the left, you get 352917. 
 If you now keep the first digit fixed in place, and rotate the remaining digits, you get 329175. 

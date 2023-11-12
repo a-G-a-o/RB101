@@ -38,7 +38,7 @@ You may use rotate_array from inside your new method.
 
 =end
 
-# my solution
+# my solution:--------------------
 def rotate_array(arr)
   new_arr = []
 
@@ -48,7 +48,7 @@ def rotate_array(arr)
   new_arr << arr[0]
 end
 
-#ls solution
+#ls solution:---------------------
 def rotate_array(arr)
   arr[1..-1] + arr[0]
 end
@@ -61,7 +61,7 @@ x = [1, 2, 3, 4]
 p rotate_array(x) == [2, 3, 4, 1]   # => true
 x == [1, 2, 3, 4]                 # => true
 
-#further exploration:
+#further exploration:-------------
 def rotate_string(str)
   str[1..-1] + str[0]
 end
@@ -69,6 +69,7 @@ end
 str = 'anita gao'
 puts rotate_string(str)
 
+#further exploration pt2:----------
 def rotate_integer(int)
   rotate_string(int.to_s).to_i
 end
